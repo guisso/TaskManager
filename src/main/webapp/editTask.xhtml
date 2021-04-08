@@ -1,0 +1,175 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition 
+    template="./WEB-INF/templates/default.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:define name="main">
+        <h:form 
+            id="editAddTask">
+
+            <!--Optional URL task ID catch-->
+            <f:metadata>
+                <f:viewParam
+                    name="taskId"
+                    value="#{taskBean.selectedTaskId}" />
+            </f:metadata>
+
+            <p:panelGrid
+                columns="2"
+                styleClass="ui-noborder">
+
+                <p:outputLabel
+                    for="description"
+                    value="#{i18n.description}" />
+                <p:inputText
+                    id="description"
+                    value="#{taskBean.selectedTask.description}"
+                    styleClass="description"
+                    maxlength="150" />
+
+                <p:outputLabel
+                    for="cost"
+                    value="#{i18n.cost}" />
+                <p:inputNumber
+                    id="cost"
+                    value="#{taskBean.selectedTask.cost}"
+                    symbol="#{i18n.currencysymbol} "
+                    symbolPosition="p"
+                    decimalSeparator=","
+                    thousandSeparator="."
+                    minValue="0"
+                    maxValue="99999.99"
+                    decimalPlaces="2" />
+
+                <p:outputLabel
+                    for="expiration"
+                    value="#{i18n.expiration}" />
+                <p:datePicker 
+                    id="expiration"
+                    value="#{taskBean.selectedTask.expiration}"
+                    mask="true"
+                    maskSlotChar="_"
+                    pattern="dd/MM/yyyy"
+                    mindate="#{taskBean.minDate}"
+                    showButtonBar="true"
+                    locale="#{i18n.locale}" />
+
+                <p:outputLabel
+                    for="priority"
+                    value="#{i18n.priority}" />
+                <p:spinner 
+                    id="priority"
+                    value="#{taskBean.selectedTask.priority}"
+                    min="1"
+                    max="10"
+                    styleClass="priority" />
+
+                <p:outputLabel
+                    for="conclusion"
+                    value="#{i18n.conclusion}" />
+                <p:datePicker 
+                    id="conclusion"
+                    value="#{taskBean.selectedTask.conclusion}"
+                    mask="true"
+                    maskSlotChar="_"
+                    pattern="dd/MM/yyyy"
+                    maxdate="#{taskBean.maxDate}"
+                    showButtonBar="true"
+                    locale="#{i18n.locale}" />
+
+                <p:outputLabel
+                    for="persons"
+                    value="#{i18n.persons}" />
+                <p:scrollPanel
+                    style="max-height: 5em;">
+                    <p:selectManyCheckbox
+                        id="persons"
+                        value="#{taskBean.selectedTask.persons}"
+                        converter="personConverter"
+                        layout="pageDirection"
+                        styleClass="persons">
+                        <f:selectItems
+                            value="#{personBean.persons}"
+                            var="person"
+                            itemLabel="#{person.name}"
+                            itemValue="#{person}" />
+                        <f:attribute 
+                            name="collectionType" 
+                            value="java.util.ArrayList" />
+                    </p:selectManyCheckbox>
+                </p:scrollPanel>
+
+            </p:panelGrid>
+
+            <h:panelGroup
+                style="display: flex; justify-content: center; margin-top: .5em;">
+                <!--Delete Task-->
+                <p:commandButton
+                    id="remove"
+                    title="#{i18n.remove}"
+                    icon="pi pi-trash"
+                    process="@this"
+                    disabled="#{empty taskBean.selectedTask.id}"
+                    action="#{taskBean.moveCurrentToTrash()}"
+                    styleClass="rounded-button ui-button-danger">
+                    <p:confirm
+                        type="popup"
+                        header="#{i18n.confirmation}"
+                        message="#{i18n.excludemsg}"
+                        icon="pi pi-exclamation-triangle" />
+                </p:commandButton>
+
+                &nbsp;
+
+                <!--Cancel operation-->
+                <p:commandButton
+                    id="cancel"
+                    title="#{i18n.cancel}"
+                    icon="pi pi-times"
+                    action="index?faces-redirect=true"
+                    process="@this"
+                    style="color: white;"
+                    styleClass="rounded-button ui-button-info" />
+
+                &nbsp;
+
+                <!--Save Task-->
+                <p:commandButton
+                    id="save"
+                    title="#{i18n.save}"
+                    icon="pi pi-save"
+                    process="@form"
+                    action="#{taskBean.saveCurrent()}"
+                    styleClass="rounded-button ui-button-success" />
+            </h:panelGroup>
+
+            <p:confirmPopup 
+                global="true">
+                <p:commandButton 
+                    value="#{i18n.no}" 
+                    type="button" 
+                    styleClass="ui-confirm-popup-no ui-button-success"/>
+                <p:commandButton 
+                    value="#{i18n.yes}" 
+                    type="button" 
+                    styleClass="ui-confirm-popup-yes ui-button-danger" />
+            </p:confirmPopup>
+
+            <p:blockUI
+                block="editAddTask"
+                trigger="save">
+                <i class="pi pi-spin pi-spinner" style="font-size: 3rem" />
+            </p:blockUI>
+
+            <h:messages />
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

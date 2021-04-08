@@ -1,0 +1,166 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition 
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    template="/WEB-INF/templates/default.xhtml"
+    xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="main">
+        <!--
+        ui-button-...
+            secondary
+            success
+            info
+            warning
+            help
+            danger
+        -->
+        <p:commandButton 
+            icon="pi pi-check" 
+            styleClass="rounded-button ui-button-secondary" />
+        <p:commandButton 
+            icon="pi pi-check" 
+            styleClass="rounded-button ui-button-flat" />
+        <p:commandButton 
+            icon="pi pi-check" 
+            styleClass="rounded-button ui-button-outlined" />
+
+        <p:inplace 
+            editor="true">
+            <p:inputText 
+                value="#{inplaceView.text}" 
+                required="true" 
+                label="text"/>
+        </p:inplace>
+
+        <!--
+        mask=...
+            pint
+            int
+            pnum
+            num
+            hex
+            email
+            alpha
+            alphanum
+        regEx="/[ABC]/i" 'i' = insensitive case
+        -->
+        <p:inputText>
+            <p:keyFilter mask="num" />
+        </p:inputText>
+
+        <p:selectBooleanButton 
+            onLabel="Yes" 
+            offLabel="No"
+            onIcon="pi pi-check" 
+            offIcon="pi pi-times" 
+            style="width:6rem" />
+
+        <p:selectCheckboxMenu 
+            id="multiple" 
+            value="#{checkboxView.selectedCities2}" 
+            label="Cities" 
+            style="min-width: 15rem"
+            multiple="true"
+            filter="true" 
+            filterMatchMode="startsWith" 
+            panelStyle="width: 30rem" 
+            scrollHeight="250">
+            <p:ajax 
+                event="itemUnselect" 
+                listener="#{checkboxView.onItemUnselect}"/>
+<!--            <f:selectItems 
+                value="#{checkboxView.cities}"/>-->
+        </p:selectCheckboxMenu>
+
+
+        <p:growl id="msg"/>
+        <p:toggleSwitch 
+            value="#{selectBooleanView.value2}">
+            <p:ajax 
+                listener="#{selectBooleanView.addMessage}" 
+                update="msg"/>
+        </p:toggleSwitch>
+
+
+        <p:triStateCheckbox 
+            id="ajaxTriState" 
+            value="#{triStateCheckboxView.value2}"
+            stateTwoIcon="pi pi-plus" 
+            stateThreeIcon="pi pi-minus">
+            <p:ajax 
+                event="change" 
+                update="growl" 
+                listener="#{triStateCheckboxView.addMessage}"/>
+        </p:triStateCheckbox>
+
+
+        <!--        .ui-splitbutton {
+                margin-right: .5rem;
+                }-->
+        <p:splitButton 
+            value="Save" 
+            action="#{buttonView.save}" 
+            update="messages" 
+            icon="pi pi-save"
+            styleClass="ui-button-info">
+            <p:menuitem 
+                value="Update" 
+                action="#{buttonView.update}" 
+                update="messages" 
+                icon="pi pi-refresh"/>
+            <p:menuitem 
+                value="Delete" 
+                action="#{buttonView.delete}" 
+                ajax="false" 
+                icon="pi pi-times"/>
+            <p:divider />
+            <p:menuitem 
+                value="Homepage" 
+                url="http://www.primefaces.org" 
+                icon="pi pi-home"/>
+        </p:splitButton>
+        
+        
+        <h5>Draggable Rows</h5>
+        <!--
+        size=...
+            small
+            large
+        -->
+        <p:dataTable 
+            stripedRows="true"
+            stickyHeader="true" 
+            stickyTopAt=".layout-topbar"
+            size="small"
+            rowStyleClass="#{product.price le 50.0 ? 'cheap' : null}"
+            var="product" 
+            value="#{dtReorderView.products2}" 
+            draggableRows="true">
+            
+            <p:ajax 
+                event="rowReorder" 
+                listener="#{dtReorderView.onRowReorder}" 
+                update=":form:msgs"/>
+
+<!--            <p:column headerText="Code">
+                <h:outputText value="#{product.code}" />
+            </p:column>-->
+
+<!--            <p:column headerText="Name">
+                <h:outputText value="#{product.name}" />
+            </p:column>-->
+
+<!--            <p:column headerText="Category">
+                <h:outputText value="#{product.category}" />
+            </p:column>-->
+
+<!--            <p:column headerText="Quantity">
+                <h:outputText value="#{product.quantity}" />
+            </p:column>-->
+        </p:dataTable>
+
+
+    </ui:define>
+
+</ui:composition>

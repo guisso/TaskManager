@@ -1,0 +1,64 @@
+body, header, footer {
+    margin: 0;
+    padding: 1em .5em;
+}
+
+body {
+    background-color: #ffffff;
+    padding: 1em;
+}
+
+header {
+    /*position: relative;*/
+    background-color: #036fab;
+    color: white;
+}
+
+main {
+    background-color: #dddddd;
+}
+
+footer {
+    /*position: relative;*/
+    background-color: #c2dfef;
+}
+
+body .ui-panelgrid .ui-panelgrid-cell {
+    padding: .35em .7em;
+}
+
+body .ui-panelgrid td:nth-child(1) {
+    text-align: right;
+}
+
+body .ui-panelgrid td:nth-child(2) {
+    width: 100%;
+}
+
+.persons td {
+    text-align: left !important;
+}
+
+.description {
+    width: 100%;
+}
+
+.priority {
+    width: 7em;
+}
+
+div#dtheader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+div#dtheader h2 {
+    margin: 0;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

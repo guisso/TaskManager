@@ -1,0 +1,323 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    template="/WEB-INF/templates/default.xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+
+    <ui:define name="main">
+
+        <p:accordionPanel
+            activeIndex="-1"
+            id="accNewTask"
+            widgetVar="accNewTask">
+            <!--
+            Here, the reset will doing all the operations
+            on back and front-end
+            onTabClose="#{taskBean.reset()} ">
+            -->
+
+            <p:ajax 
+                event="tabClose"
+                listener="#{taskBean.reset()}"
+                update=":accNewTask:editAddTask" />
+
+            <p:tab 
+                titleStyle="font-size:.85em;"
+                id="task"
+                title="#{i18n.task}">
+
+                <!--
+                <f:facet name="title">
+                    <p:button
+                        icon="pi pi-save"
+                        title="TESTES: # {i18n.save}"
+                        onclick=""
+                        styleClass="rounded-button ui-button-success" />
+                </f:facet>
+                -->
+
+                <h:form 
+                    id="editAddTask">
+
+                    <p:panelGrid
+                        columns="2"
+                        styleClass="ui-noborder">
+
+                        <p:outputLabel
+                            for="description"
+                            value="#{i18n.description}" />
+                        <p:inputText
+                            id="description"
+                            value="#{taskBean.selectedTask.description}"
+                            styleClass="description"
+                            maxlength="150" />
+
+                        <p:outputLabel
+                            for="cost"
+                            value="#{i18n.cost}" />
+                        <p:inputNumber
+                            id="cost"
+                            value="#{taskBean.selectedTask.cost}"
+                            symbol="#{i18n.currencysymbol} "
+                            symbolPosition="p"
+                            decimalSeparator=","
+                            thousandSeparator="."
+                            minValue="0"
+                            maxValue="99999.99"
+                            decimalPlaces="2" />
+
+                        <p:outputLabel
+                            for="expiration"
+                            value="#{i18n.expiration}" />
+                        <p:datePicker 
+                            id="expiration"
+                            value="#{taskBean.selectedTask.expiration}"
+                            mask="true"
+                            maskSlotChar="_"
+                            pattern="dd/MM/yyyy"
+                            mindate="#{taskBean.minDate}"
+                            showButtonBar="true"
+                            locale="#{i18n.locale}" />
+
+                        <p:outputLabel
+                            for="priority"
+                            value="#{i18n.priority}" />
+                        <p:spinner 
+                            id="priority"
+                            value="#{taskBean.selectedTask.priority}"
+                            min="1"
+                            max="10"
+                            styleClass="priority" />
+
+                        <p:outputLabel
+                            for="conclusion"
+                            value="#{i18n.conclusion}" />
+                        <p:datePicker 
+                            id="conclusion"
+                            value="#{taskBean.selectedTask.conclusion}"
+                            mask="true"
+                            maskSlotChar="_"
+                            pattern="dd/MM/yyyy"
+                            maxdate="#{taskBean.maxDate}"
+                            showButtonBar="true"
+                            locale="#{i18n.locale}" />
+
+                        <p:outputLabel
+                            for="persons"
+                            value="#{i18n.persons}" />
+                        <p:scrollPanel
+                            style="max-height: 5em;">
+                            <p:selectManyCheckbox
+                                id="persons"
+                                value="#{taskBean.selectedTask.persons}"
+                                converter="personConverter"
+                                layout="pageDirection"
+                                styleClass="persons">
+                                <!--                                <f:ajax
+                                                                    event="change"
+                                                                    listener="#{taskBean.onPersonSelected()}" />-->
+                                <f:selectItems
+                                    value="#{personBean.persons}"
+                                    var="person"
+                                    itemLabel="#{person.name}"
+                                    itemValue="#{person}" />
+                                <f:attribute 
+                                    name="collectionType" 
+                                    value="java.util.ArrayList" />
+                            </p:selectManyCheckbox>
+                        </p:scrollPanel>
+
+                    </p:panelGrid>
+
+                    <h:panelGroup
+                        style="display: flex; justify-content: center; margin-top: .5em;">
+                        <!--Delete Task-->
+                        <p:commandButton
+                            id="remove"
+                            disabled="#{empty taskBean.selectedTask.id}"
+                            title="#{i18n.remove}"
+                            icon="pi pi-trash"
+                            process="@this"
+                            action="#{taskBean.moveCurrentToTrash()}"
+                            oncomplete="PF('accNewTask').unselect(0)"
+                            update=":formTasks:tasksTable"
+                            styleClass="rounded-button ui-button-danger">
+                            <p:confirm
+                                type="popup"
+                                header="#{i18n.confirmation}"
+                                message="#{i18n.excludemsg}"
+                                icon="pi pi-exclamation-triangle" />
+                        </p:commandButton>
+
+                        &nbsp;
+
+                        <!--Cancel operation-->
+                        <p:commandButton
+                            id="cancel"
+                            title="#{i18n.cancel}"
+                            icon="pi pi-times"
+                            oncomplete="PF('accNewTask').unselect(0)"
+                            style="color: white;"
+                            styleClass="rounded-button ui-button-info" />
+
+                        &nbsp;
+
+                        <!--Save Task-->
+                        <p:commandButton
+                            id="save"
+                            title="#{i18n.save}"
+                            icon="pi pi-save"
+                            process="@form"
+                            action="#{taskBean.saveCurrent()}"
+                            oncomplete="PF('accNewTask').unselect(0)"
+                            update=":formTasks:tasksTable"
+                            styleClass="rounded-button ui-button-success" />
+                    </h:panelGroup>
+
+                    <p:confirmPopup 
+                        global="true">
+                        <p:commandButton 
+                            value="#{i18n.no}" 
+                            type="button" 
+                            styleClass="ui-confirm-popup-no ui-button-success"/>
+                        <p:commandButton 
+                            value="#{i18n.yes}" 
+                            type="button" 
+                            styleClass="ui-confirm-popup-yes ui-button-danger" />
+                    </p:confirmPopup>
+
+                    <p:blockUI
+                        block="editAddTask"
+                        trigger="save">
+                        <i class="pi pi-spin pi-spinner" style="font-size: 3rem" />
+                    </p:blockUI>
+
+                    <h:messages />
+
+                </h:form>
+
+            </p:tab>
+
+        </p:accordionPanel>
+
+        <h:form id="formTasks">
+            <p:dataTable
+                id="tasksTable"
+                widgetVar="tasksTable"
+                value="#{taskBean.allTasks}"
+                var="task"
+                filteredValue="#{taskBean.filteredTasks}"
+                reflow="true"
+                paginator="true"
+                paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                currentPageReportTemplate="{startRecord}-{endRecord} #{i18n.of} {totalRecords} #{i18n.records}"
+                rowsPerPageTemplate="5,10,{ShowAll|'#{i18n.all}'}"
+                rows="10"
+                size="small">
+
+                <f:facet name="header">
+                    <div id="dtheader">
+                        <h2>#{i18n.tasks.toUpperCase()}</h2>
+
+                        <span class="filter-container ui-input-icon-left">
+                            <i class="pi pi-search" />
+                            <p:inputText 
+                                id="globalFilter" 
+                                onkeyup="PF('tasksTable').filter()" 
+                                placeholder="#{i18n.search}"/>
+                        </span>
+                    </div>
+                </f:facet>
+
+                <p:column
+                    headerText="ID"
+                    sortBy="#{task.id}"
+                    style="width: 4em; text-align: center;">
+                    <h:outputText value="#{task.id}" />
+                </p:column>
+
+                <p:column 
+                    headerText="#{i18n.description}"
+                    field="description"
+                    filterStyle="display: none;">
+                    <p:badge
+                        rendered="#{task.persons.size() > 0}"
+                        value="#{task.persons.size()}"
+                        severity="warning" />&nbsp;
+                    <!--severity: success, info, warning, danger-->
+                    <h:outputText 
+                        value="#{task.description}"
+                        pt:title="#{task.allocatedPersons()}"/>
+                </p:column>
+
+                <p:column
+                    style="width: 10em; text-align: center;">
+                    <!--Edit Task 1-->
+                    <p:commandButton 
+                        icon="pi pi-pencil" 
+                        process="@this"
+                        onstart="$('html, body').animate({ scrollTop: 0 }, 'slow')"
+                        oncomplete="PF('accNewTask').select(0)"
+                        actionListener="#{taskBean.loadTaskWithPersons(task)}"
+                        update=":accNewTask:editAddTask"
+                        styleClass="rounded-button ui-button-help">
+                        <!--                        <f:param
+                                                    name="paramTest"
+                                                    value="false" />
+                                                <f:attribute
+                                                    name="attribTest"
+                                                    value="true" />-->
+                    </p:commandButton>&nbsp;
+
+                    <!--Edit Task 2-->
+                    <p:button 
+                        icon="pi pi-pencil" 
+                        outcome="editTask"
+                        styleClass="rounded-button ui-button-info">
+                        <f:param
+                            name="taskId"
+                            value="#{task.id}" />
+                    </p:button>&nbsp;
+
+                    <!--Delete Task-->
+                    <p:commandButton
+                        id="remove"
+                        title="#{i18n.remove}"
+                        icon="pi pi-trash"
+                        process="@this"
+                        action="#{taskBean.moveToTrash(task)}"
+                        update=":formTasks:tasksTable"
+                        styleClass="rounded-button ui-button-danger">
+                        <p:confirm
+                            type="popup"
+                            header="#{i18n.confirmation}"
+                            message="#{i18n.excludemsg}"
+                            icon="pi pi-exclamation-triangle"
+                            />
+                    </p:commandButton>
+                </p:column>
+
+            </p:dataTable>
+
+            <p:confirmPopup 
+                global="true">
+                <p:commandButton 
+                    value="#{i18n.no}" 
+                    type="button" 
+                    styleClass="ui-confirm-popup-no ui-button-success"/>
+                <p:commandButton 
+                    value="#{i18n.yes}" 
+                    type="button" 
+                    styleClass="ui-confirm-popup-yes ui-button-danger" />
+            </p:confirmPopup>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>
