@@ -28,7 +28,7 @@ public class PersonConverter
             return null;
         }
         return personService
-                .findPersonById(Long.parseLong(id));
+                .findPersonById(Long.valueOf(id));
     }
 
     @Override
