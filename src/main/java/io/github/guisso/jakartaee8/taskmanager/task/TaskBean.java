@@ -19,7 +19,7 @@ import javax.inject.Named;
 public class TaskBean implements Serializable {
 
     @Inject
-    private TaskServiceBeanLocal taskService;
+    private TaskServiceLocal taskService;
 
     private Task selectedTask;
 

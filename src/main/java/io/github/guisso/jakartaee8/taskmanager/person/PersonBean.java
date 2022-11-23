@@ -19,7 +19,7 @@ public class PersonBean
         implements Serializable {
 
     @Inject
-    private PersonServiceBeanLocal personService;
+    private PersonServiceLocal personService;
 
     private Person selectedPerson;
 
