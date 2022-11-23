@@ -11,7 +11,7 @@ import javax.persistence.PersistenceContext;
  */
 @Stateless
 public class TaskService
-        implements TaskServiceBeanLocal {
+        implements TaskServiceLocal {
 
     @PersistenceContext
     private EntityManager entityManager;

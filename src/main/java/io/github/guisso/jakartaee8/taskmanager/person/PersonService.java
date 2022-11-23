@@ -11,7 +11,7 @@ import javax.persistence.PersistenceContext;
  */
 @Stateless
 public class PersonService 
-        implements PersonServiceBeanLocal {
+        implements PersonServiceLocal {
 
     @PersistenceContext
     private EntityManager entityManager;
