@@ -1,13 +1,12 @@
 package io.github.guisso.jakartaee8.taskmanager.person;
 
-import io.github.guisso.jakartaee8.taskmanager.entity.JpaEntity;
+import io.github.guisso.jakartaee8.taskmanager.entity.GeneralEntity;
 import io.github.guisso.jakartaee8.taskmanager.task.Task;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -49,7 +48,8 @@ import javax.validation.constraints.Past;
             + "order by p.name"
     )
 })
-public class Person extends JpaEntity
+public class Person 
+        extends GeneralEntity
         implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -76,8 +76,22 @@ public class Person extends JpaEntity
     @Column(nullable = true)
     @ManyToMany(mappedBy = "persons",
             cascade = {CascadeType.ALL})
-    // CascadeType.PERSIST, CascadeType.MERGE, ...
     private List<Task> tasks;
+
+    public Person() {
+        super();
+    }
+
+    public Person(
+            String name, String email, 
+            Integer cellphone, LocalDate birthday) {
+        super();
+
+        this.name = name;
+        this.email = email;
+        this.cellphone = cellphone;
+        this.birthday = birthday;
+    }
 
     //<editor-fold defaultstate="collapsed" desc="Getters/Setters">
     public String getName() {
@@ -157,18 +171,18 @@ public class Person extends JpaEntity
         return "io.github.guisso.jakartaee8.taskmanager.person.Person[ id=" + getId()
                 + ", uuid=" + getUuid()
                 + ", name=" + name
-//                + ", tasks[persons != null]=" + tasks
-//                        .stream()
-//                        .filter(t -> t.getPersons() != null)
-//                        .map(t -> t.getId().toString())
-//                        .collect(Collectors
-//                                .joining(", ", "[ ", " ]"))
-//                + ", tasks[persons == null]=" + tasks
-//                        .stream()
-//                        .filter(t -> t.getPersons() == null)
-//                        .map(t -> t.getId().toString())
-//                        .collect(Collectors
-//                                .joining(", ", "[ ", " ]"))
+                //                + ", tasks[persons != null]=" + tasks
+                //                        .stream()
+                //                        .filter(t -> t.getPersons() != null)
+                //                        .map(t -> t.getId().toString())
+                //                        .collect(Collectors
+                //                                .joining(", ", "[ ", " ]"))
+                //                + ", tasks[persons == null]=" + tasks
+                //                        .stream()
+                //                        .filter(t -> t.getPersons() == null)
+                //                        .map(t -> t.getId().toString())
+                //                        .collect(Collectors
+                //                                .joining(", ", "[ ", " ]"))
                 + " ]";
     }
     //</editor-fold>
