@@ -14,15 +14,15 @@ import javax.inject.Inject;
 @FacesConverter(value = "personConverter", managed = true)
 @ApplicationScoped
 public class PersonConverter
-    implements Converter<Person>{
-    
+        implements Converter<Person> {
+
     @Inject
-    private PersonServiceBeanLocal personService;
+    private PersonServiceLocal personService;
 
     @Override
     public Person getAsObject(
-            FacesContext context, 
-            UIComponent component, 
+            FacesContext context,
+            UIComponent component,
             String id) {
         if (id == null) {
             return null;
@@ -33,13 +33,13 @@ public class PersonConverter
 
     @Override
     public String getAsString(
-            FacesContext context, 
-            UIComponent component, 
+            FacesContext context,
+            UIComponent component,
             Person person) {
         if (person == null) {
             return null;
         }
         return person.getId().toString();
     }
-    
+
 }

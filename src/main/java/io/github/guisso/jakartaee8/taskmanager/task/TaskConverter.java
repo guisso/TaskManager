@@ -1,7 +1,6 @@
 package io.github.guisso.jakartaee8.taskmanager.task;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.faces.annotation.FacesConfig;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
@@ -18,7 +17,7 @@ public class TaskConverter
         implements Converter<Task> {
 
     @Inject
-    private TaskServiceBeanLocal taskService;
+    private TaskServiceLocal taskService;
 
     @Override
     public Task getAsObject(
@@ -29,7 +28,7 @@ public class TaskConverter
             return null;
         }
         return taskService
-                .loadTaskByIdWithPersons(Long.parseLong(id));
+                .loadTaskByIdWithPersons(Long.valueOf(id));
     }
 
     @Override
