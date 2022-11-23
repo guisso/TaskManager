@@ -23,7 +23,7 @@ public class PersonBean
 
     private Person selectedPerson;
 
-    // Retains all the persons on database
+    // Retains all the persons from database
     private List<Person> persons;
 
     public PersonBean() {
