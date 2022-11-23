@@ -1,6 +1,6 @@
 package io.github.guisso.jakartaee8.taskmanager.task;
 
-import io.github.guisso.jakartaee8.taskmanager.entity.JpaEntity;
+import io.github.guisso.jakartaee8.taskmanager.entity.GeneralEntity;
 import io.github.guisso.jakartaee8.taskmanager.person.Person;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -23,6 +23,7 @@ import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Past;
 import javax.validation.constraints.PastOrPresent;
 
 /**
@@ -70,12 +71,13 @@ import javax.validation.constraints.PastOrPresent;
     @NamedQuery(
             name = "task.loadTaskByIdWithPersons",
             query = "select distinct t from Task t "
-            + "left join fetch t.persons "
+            + "left join fetch t.persons " // FETCH!
             + "where t.trash = false and t.id = :id "
             + "order by t.id"
     )
 })
-public class Task extends JpaEntity
+public class Task 
+        extends GeneralEntity
         implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -98,7 +100,8 @@ public class Task extends JpaEntity
     private LocalDate expiration;
 
     @Column(columnDefinition = "DATE")
-    @PastOrPresent // Jakarta EE Validation
+//    @PastOrPresent // Jakarta EE Validation
+    @Past
     private LocalDate conclusion;
 
     @Column(nullable = true)
