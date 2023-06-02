@@ -1,6 +1,6 @@
 package io.github.guisso.jakartaee8.taskmanager.person;
 
-import io.github.guisso.jakartaee8.taskmanager.entity.GeneralEntity;
+import io.github.guisso.jakartaee8.taskmanager.entity.JpaEntity;
 import io.github.guisso.jakartaee8.taskmanager.task.Task;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -49,7 +49,7 @@ import javax.validation.constraints.Past;
     )
 })
 public class Person 
-        extends GeneralEntity
+        extends JpaEntity
         implements Serializable {
 
     private static final long serialVersionUID = 1L;
