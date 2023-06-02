@@ -1,6 +1,6 @@
 package io.github.guisso.jakartaee8.taskmanager.task;
 
-import io.github.guisso.jakartaee8.taskmanager.entity.GeneralEntity;
+import io.github.guisso.jakartaee8.taskmanager.entity.JpaEntity;
 import io.github.guisso.jakartaee8.taskmanager.person.Person;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -24,7 +24,6 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Past;
-import javax.validation.constraints.PastOrPresent;
 
 /**
  *
@@ -77,7 +76,7 @@ import javax.validation.constraints.PastOrPresent;
     )
 })
 public class Task 
-        extends GeneralEntity
+        extends JpaEntity
         implements Serializable {
 
     private static final long serialVersionUID = 1L;
